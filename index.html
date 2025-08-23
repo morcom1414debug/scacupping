@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCA Cupping – ฟอร์มประเมินกาแฟ</title>
+<style>
+body{margin:0;font-family:sans-serif;background:#0b0f14;color:#e5e7eb}
+header{background:#111827;padding:12px 16px;position:sticky;top:0;z-index:10}
+h1{margin:0;font-size:20px}
+.wrap{max-width:900px;margin:auto;padding:16px}
+.card{background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:14px;margin-bottom:16px}
+h2{margin:0 0 6px 0;font-size:18px;color:#f9fafb}
+p.hint{font-size:13px;color:#9ca3af;margin:0 0 8px 0}
+label{display:block;margin-bottom:4px;font-weight:bold}
+input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid #1f2937;background:#0b1324;color:#e5e7eb;box-sizing: border-box;}
+.row{display:grid;grid-template-columns: 90px 1fr;gap:8px;align-items:center;margin-top:6px}
+.btn{padding:10px 14px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;width:100%;}
+.btn-primary{background:#22c55e;color:#fff}
+.btn-danger{background:#ef4444;color:#fff}
+.btn-export{background:#2563eb;color:#fff}
+.hidden{display:none}
+input[type=range]{width:100%}
+.cup-checks{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.cup-checks div{display:flex;align-items:center;gap:4px;}
+
+/* Summary Page Styling */
+.summary-container{display:flex;flex-direction:column;gap:16px}
+.summary-card{background:#1f2937;border-radius:16px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.4)}
+.summary-card h2,.summary-card h3{margin-top:0;color:#fbbf24}
+.summary-header{font-size:18px;font-weight:bold;margin-bottom:8px;color:#93c5fd}
+.summary-score{font-size:40px;font-weight:bold;color:#34d399;margin:12px 0}
+.grade-tag{font-size:20px;font-weight:bold;color:#f472b6}
+.summary-table{width:100%;border-collapse:collapse;margin-top:10px}
+.summary-table th,.summary-table td{border:1px solid #374151;padding:8px;text-align:left}
+.summary-table th{background:#111827;color:#fbbf24}
+</style>
+</head>
+<body>
+<header>
+<h1>ฟอร์มประเมินกาแฟ SCA (Arabica Cupping)</h1>
+</header>
+<main class="wrap">
+<div id="formPage">
+  <div class="card">
+    <h2>ข้อมูลตัวอย่าง</h2>
+    <label>หมายเลขตัวอย่าง (Sample #)</label>
+    <input type="text" id="sampleId" placeholder="เช่น A-01">
+    <label>ระดับการคั่ว</label>
+    <select id="roast">
+      <option>Light</option>
+      <option>Medium</option>
+      <option>Dark</option>
+    </select>
+    <label>หมายเหตุ</label>
+    <textarea id="notes" placeholder="รายละเอียดเพิ่มเติม"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Fragrance/Aroma</h2>
+    <p class="hint">กลิ่นหอมแห้ง + กลิ่นเมื่อเติมน้ำร้อน</p>
+    <div class="row">
+      <input type="number" id="fragranceScore" min="6" max="10" step="0.25" value="10" style="width:90px">
+      <input type="range" id="fragranceRange" min="6" max="10" step="0.25" value="10">
+    </div>
+    <label class="mt-2">บันทึกสิ่งที่เจอใน Fragrance</label>
+    <textarea id="fragranceNote" placeholder="บันทึกกลิ่นเมื่อยังเป็นผงกาแฟ"></textarea>
+    <label class="mt-2">บันทึกสิ่งที่เจอใน Aroma</label>
+    <textarea id="aromaNote" placeholder="บันทึกกลิ่นหลังจากเติมน้ำร้อน"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Flavor</h2>
+    <p class="hint">รสชาติรวมและความซับซ้อน</p>
+    <div class="row">
+      <input type="number" id="flavorScore" min="6" max="10" step="0.25" value="10" style="width:90px">
+      <input type="range" id="flavorRange" min="6" max="10" step="0.25" value="10">
+    </div>
+    <label class="mt-2">บันทึกสิ่งที่เจอใน Flavor</label>
+    <textarea id="flavorNote" placeholder="บันทึกสิ่งที่เจอใน Flavor"></textarea>
+  </div>
+  
+  <div class="card">
+    <h2>Aftertaste</h2>
+    <p class="hint">รสชาติที่ค้างอยู่หลังดื่ม</p>
+    <div class="row">
+      <input type="number" id="aftertasteScore" min="6" max="10" step="0.25" value="10" style="width:90px">
+      <input type="range" id="aftertasteRange" min="6" max="10" step="0.25" value="10">
+    </div>
+    <label class="mt-2">บันทึกสิ่งที่เจอใน Aftertaste</label>
+    <textarea id="aftertasteNote" placeholder="บันทึกสิ่งที่เจอใน Aftertaste"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Acidity</h2>
+    <p class="hint">ความเป็นกรด</p>
+    <div class="row">
+      <input type="number" id="acidityScore" min="6" max="10" step="0.25" value="10" style="width:90px">
+      <input type="range" id="acidityRange" min="6" max="10" step="0.25" value="10">
+    </div>
+    <label class="mt-2">Acidity Level</label>
+    <select id="acidityLevel">
+      <option value="">--เลือกระดับความเป็นกรด--</option>
+      <option>Low</option>
+      <option>Medium</option>
+      <option>High</option>
+    </select>
+    <label class="mt-2">บันทึกสิ่งที่เจอใน Acidity</label>
+    <textarea id="acidityNote" placeholder="บันทึกสิ่งที่เจอใน Acidity"></textarea>
+  </div>
+  
+  <div class="card">
+    <h2>Body</h2>
+    <p class="hint">ความหนักแน่น/เนื้อสัมผัส</p>
+    <div class="row">
+      <input type="number" id="bodyScore" min="6" max="10" step="0.25" value="10" style="width:90px">
+      <input type="range" id="bodyRange" min="6" max="10" step="0.25" value="10">
+    </div>
+    <label class="mt-2">บันทึกสิ่งที่เจอใน Body</label>
+    <textarea id="bodyNote" placeholder="เนื้อสัมผัสของกาแฟเป็นอย่างไร"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Balance</h2>
+    <p class="hint">ความกลมกลืนขององค์ประกอบ</p>
+    <div class="row">
+      <input type="number" id="balanceScore" min="6" max="10" step="0.25" value="10" style="width:90px">
+      <input type="range" id="balanceRange" min="6" max="10" step="0.25" value="10">
+    </div>
+    <label class="mt-2">บันทึกสิ่งที่เจอใน Balance</label>
+    <textarea id="balanceNote" placeholder="บันทึกว่าความสมดลของกาแฟเป็นอย่างไร"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Uniformity</h2>
+    <p class="hint">ความสม่ำเสมอระหว่างถ้วย : (ถ้า check จะถือว่าไม่)</p>
+    <div class="cup-checks">
+      <div><input type="checkbox" id="uniformity1"><label for="uniformity1">แก้ว 1</label></div>
+      <div><input type="checkbox" id="uniformity2"><label for="uniformity2">แก้ว 2</label></div>
+      <div><input type="checkbox" id="uniformity3"><label for="uniformity3">แก้ว 3</label></div>
+      <div><input type="checkbox" id="uniformity4"><label for="uniformity4">แก้ว 4</label></div>
+      <div><input type="checkbox" id="uniformity5"><label for="uniformity5">แก้ว 5</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Clean Cup</h2>
+    <p class="hint">ความใสสะอาด ปราศจาก off-flavor : (ถ้า check จะถือว่าไม่)</p>
+    <div class="cup-checks">
+      <div><input type="checkbox" id="cleanCup1"><label for="cleanCup1">แก้ว 1</label></div>
+      <div><input type="checkbox" id="cleanCup2"><label for="cleanCup2">แก้ว 2</label></div>
+      <div><input type="checkbox" id="cleanCup3"><label for="cleanCup3">แก้ว 3</label></div>
+      <div><input type="checkbox" id="cleanCup4"><label for="cleanCup4">แก้ว 4</label></div>
+      <div><input type="checkbox" id="cleanCup5"><label for="cleanCup5">แก้ว 5</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Sweetness</h2>
+    <p class="hint">ความหวานธรรมชาติ : (ถ้า check จะถือว่าไม่)</p>
+    <div class="cup-checks">
+      <div><input type="checkbox" id="sweetness1"><label for="sweetness1">แก้ว 1</label></div>
+      <div><input type="checkbox" id="sweetness2"><label for="sweetness2">แก้ว 2</label></div>
+      <div><input type="checkbox" id="sweetness3"><label for="sweetness3">แก้ว 3</label></div>
+      <div><input type="checkbox" id="sweetness4"><label for="sweetness4">แก้ว 4</label></div>
+      <div><input type="checkbox" id="sweetness5"><label for="sweetness5">แก้ว 5</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Overall</h2>
+    <p class="hint">ความประทับใจรวม</p>
+    <div class="row">
+      <input type="number" id="overallScore" min="6" max="10" step="0.25" value="10" style="width:90px">
+      <input type="range" id="overallRange" min="6" max="10" step="0.25" value="10">
+    </div>
+    <label class="mt-2">บันทึกความประทับใจรวม</label>
+    <textarea id="overallNote" placeholder="บันทึกความรู้สึกหรือสิ่งที่โดดเด่น"></textarea>
+  </div>
+  
+  <div class="card">
+    <h2>Defects</h2>
+    <div id="defectDynamic"></div>
+    <label>บันทึก Defect</label>
+    <textarea id="defectNotes" placeholder="รายละเอียดของ defect เช่น phenolic, grassy, fermented"></textarea>
+  </div>
+
+  <button class="btn btn-primary" id="btnFinish">เสร็จสิ้น</button>
+</div>
+
+<div id="summaryPage" class="hidden">
+  <div id="summaryCard" class="summary-container">
+
+    <div class="summary-card">
+      <div class="summary-header">ข้อมูลทั่วไป</div>
+      <p>ตัวอย่าง: <b id="sumSample"></b></p>
+      <p>Roast: <b id="sumRoast"></b></p>
+      <p>หมายเหตุ: <span id="sumNotes"></span></p>
+      <p>Defect notes: <span id="sumDefect"></span></p>
+      <p>Acidity Level: <b id="sumAcidityLevel"></b></p>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-header">คะแนนรวม</div>
+      <div class="summary-score" id="finalScore">0.00</div>
+      <div class="grade-tag" id="gradeTag"></div>
+      <div class="summary-text" id="summaryText"></div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-header">รายละเอียดคะแนน</div>
+      <table class="summary-table">
+        <thead><tr><th>หัวข้อ</th><th>คะแนน</th><th>บันทึก</th></tr></thead>
+        <tbody id="scoreDetails"></tbody>
+      </table>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-header">Defects Summary</div>
+      <p id="defectSummary"></p>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <h3>Export & Share</h3>
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <button class="btn btn-export" id="btnExportCSV">Export CSV</button>
+        <button class="btn btn-export" id="btnExportTXT">Export TXT</button>
+        <button class="btn btn-export" id="btnExportPDF">Export PDF</button>
+        <button class="btn btn-export" id="btnExportPNG">Export PNG</button>
+        <button class="btn btn-primary" id="btnShare">แชร์</button>
+    </div>
+  </div>
+  <button class="btn btn-danger" id="btnBack">ย้อนกลับ</button>
+</div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+const FIELDS = [
+  {key:'fragrance',label:'Fragrance',isScore:true,note:'fragranceNote'},
+  {key:'aroma',label:'Aroma',isScore:false,note:'aromaNote'},
+  {key:'flavor',label:'Flavor',isScore:true,note:'flavorNote'},
+  {key:'aftertaste',label:'Aftertaste',isScore:true,note:'aftertasteNote'},
+  {key:'acidity',label:'Acidity',isScore:true,note:'acidityNote'},
+  {key:'body',label:'Body',isScore:true,note:'bodyNote'},
+  {key:'balance',label:'Balance',isScore:true,note:'balanceNote'},
+  {key:'uniformity',label:'Uniformity',isCups:true,note:null},
+  {key:'cleanCup',label:'Clean Cup',isCups:true,note:null},
+  {key:'sweetness',label:'Sweetness',isCups:true,note:null},
+  {key:'overall',label:'Overall',isScore:true,note:'overallNote'}
+];
+
+function getFormData() {
+  const scores = {};
+  const cupChecks = {};
+  const notes = {};
+  const defectScores = {};
+  
+  ['fragrance', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'overall'].forEach(key => {
+    scores[key] = parseFloat(document.getElementById(`${key}Score`).value) || 0;
+  });
+
+  ['fragranceNote', 'aromaNote', 'flavorNote', 'aftertasteNote', 'acidityNote', 'bodyNote', 'balanceNote', 'overallNote'].forEach(key => {
+    notes[key] = document.getElementById(key).value;
+  });
+
+  ['uniformity', 'cleanCup', 'sweetness'].forEach(key => {
+    cupChecks[key] = [];
+    for(let i = 1; i <= 5; i++) {
+      cupChecks[key].push(document.getElementById(`${key}${i}`).checked ? 1 : 0);
+    }
+  });
+
+  const defectSelects = document.getElementById('defectDynamic').querySelectorAll('select');
+  defectSelects.forEach((select, index) => {
+    defectScores[index] = parseInt(select.value);
+  });
+  
+  return {
+    sampleId: document.getElementById('sampleId').value,
+    roast: document.getElementById('roast').value,
+    notes: document.getElementById('notes').value,
+    defectNotes: document.getElementById('defectNotes').value,
+    acidityLevel: document.getElementById('acidityLevel').value,
+    scores: scores,
+    cupChecks: cupChecks,
+    notes: notes,
+    defectScores: defectScores
+  };
+}
+
+function renderDefects() {
+  const defectDynamicDiv = document.getElementById('defectDynamic');
+  defectDynamicDiv.innerHTML = '';
+  for(let i = 1; i <= 5; i++) {
+    if (document.getElementById(`cleanCup${i}`).checked) {
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <label>Defect แก้ว ${i}</label>
+        <select data-cup-index="${i}">
+          <option value="2">2</option>
+          <option value="4">4</option>
+        </select>
+      `;
+      defectDynamicDiv.appendChild(container);
+    }
+  }
+}
+
+for(let i = 1; i <= 5; i++) {
+  document.getElementById(`cleanCup${i}`).addEventListener('change', renderDefects);
+}
+
+function updateSummary() {
+  const data = getFormData();
+  
+  let totalScore = 0;
+  let defectDeduction = 0;
+  
+  const scoreKeys = ['fragrance', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'overall'];
+  scoreKeys.forEach(key => {
+    totalScore += data.scores[key];
+  });
+  
+  const cupCheckKeys = ['uniformity', 'cleanCup', 'sweetness'];
+  cupCheckKeys.forEach(key => {
+    totalScore += 10 - data.cupChecks[key].filter(v => v === 1).length * 2;
+  });
+  
+  Object.values(data.defectScores).forEach(val => {
+    defectDeduction += val;
+  });
+  
+  const finalScore = totalScore - defectDeduction;
+  const grade = finalScore >= 80 ? 'Specialty' : 'Not Specialty';
+  const defectCount = data.cupChecks.cleanCup.filter(v => v === 1).length;
+  
+  document.getElementById('sumSample').textContent = data.sampleId;
+  document.getElementById('sumRoast').textContent = data.roast;
+  document.getElementById('sumNotes').textContent = data.notes;
+  document.getElementById('sumDefect').textContent = data.defectNotes;
+  document.getElementById('sumAcidityLevel').textContent = data.acidityLevel;
+  document.getElementById('finalScore').textContent = finalScore.toFixed(2);
+  document.getElementById('gradeTag').textContent = grade;
+  
+  const scoreDetailsTbody = document.getElementById('scoreDetails');
+  scoreDetailsTbody.innerHTML = '';
+
+  const allFields = [
+    {key:'fragrance',label:'Fragrance/Aroma',score:data.scores.fragrance,note:`${data.notes.fragranceNote} / ${data.notes.aromaNote}`},
+    {key:'flavor',label:'Flavor',score:data.scores.flavor,note:data.notes.flavorNote},
+    {key:'aftertaste',label:'Aftertaste',score:data.scores.aftertaste,note:data.notes.aftertasteNote},
+    {key:'acidity',label:'Acidity',score:data.scores.acidity,note:data.notes.acidityNote},
+    {key:'body',label:'Body',score:data.scores.body,note:data.notes.bodyNote},
+    {key:'balance',label:'Balance',score:data.scores.balance,note:data.notes.balanceNote},
+    {key:'uniformity',label:'Uniformity',score:10 - data.cupChecks.uniformity.filter(v=>v===1).length*2,note:data.cupChecks.uniformity.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ')},
+    {key:'cleanCup',label:'Clean Cup',score:10 - data.cupChecks.cleanCup.filter(v=>v===1).length*2,note:data.cupChecks.cleanCup.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ')},
+    {key:'sweetness',label:'Sweetness',score:10 - data.cupChecks.sweetness.filter(v=>v===1).length*2,note:data.cupChecks.sweetness.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ')},
+    {key:'overall',label:'Overall',score:data.scores.overall,note:data.notes.overallNote}
+  ];
+  
+  allFields.forEach(f => {
+    const row = document.createElement('tr');
+    let noteText = '';
+    let scoreDisplay = f.score.toFixed(2);
+    
+    if (f.key === 'fragrance') {
+        noteText = data.notes.fragranceNote + (data.notes.aromaNote ? ` / ${data.notes.aromaNote}` : '');
+    } else if (f.key === 'overall') {
+        noteText = data.notes.overallNote;
+    } else if (f.key === 'uniformity' || f.key === 'cleanCup' || f.key === 'sweetness') {
+        const defects = data.cupChecks[f.key].map((v, i) => v === 1 ? `แก้ว ${i+1}` : null).filter(Boolean);
+        noteText = defects.length > 0 ? `มีแก้วที่ ${defects.join(', ')} ไม่มีความเป็น ${f.label.toLowerCase()}` : 'ทุกแก้วผ่าน';
+    } else {
+        noteText = data.notes[`${f.key}Note`];
+    }
+    
+    if (f.key === 'fragrance' || f.key === 'aroma') {
+        // Handled below
+    } else {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${f.label}</td><td>${scoreDisplay}</td><td>${noteText}</td>`;
+        scoreDetailsTbody.appendChild(row);
+    }
+  });
+  
+  const fragranceAromaScore = data.scores.fragrance;
+  const fragranceAromaNote = `${data.notes.fragranceNote || ''} / ${data.notes.aromaNote || ''}`;
+  
+  const faRow = document.createElement('tr');
+  faRow.innerHTML = `<td>Fragrance/Aroma</td><td>${fragranceAromaScore.toFixed(2)}</td><td>${fragranceAromaNote}</td>`;
+  scoreDetailsTbody.insertBefore(faRow, scoreDetailsTbody.firstChild);
+  
+  document.getElementById('defectSummary').textContent = `Defects: ${defectCount} แก้ว, คะแนนหักรวม: ${defectDeduction} คะแนน`;
+  
+  let summaryMsg = `กาแฟตัวอย่าง ${data.sampleId || ''} ระดับการคั่ว ${data.roast} ได้คะแนนรวม ${finalScore.toFixed(2)} จัดอยู่ในระดับ ${grade}. `;
+  if(data.acidityLevel) summaryMsg += `Acidity: ${data.acidityLevel}. `;
+  if(data.notes) summaryMsg += `หมายเหตุ: ${data.notes}. `;
+  if(data.defectNotes) summaryMsg += `Defect notes: ${data.defectNotes}. `;
+  if(data.notes.overallNote) summaryMsg += `ความประทับใจรวม: ${data.notes.overallNote}`;
+  document.getElementById('summaryText').textContent = summaryMsg;
+}
+
+document.getElementById('btnFinish').addEventListener('click', (e) => {
+  e.preventDefault();
+  updateSummary();
+  document.getElementById('formPage').classList.add('hidden');
+  document.getElementById('summaryPage').classList.remove('hidden');
+});
+
+document.getElementById('btnBack').addEventListener('click', () => {
+  document.getElementById('summaryPage').classList.add('hidden');
+  document.getElementById('formPage').classList.remove('hidden');
+});
+
+function syncInputs(numId, rangeId) {
+  const numInput = document.getElementById(numId);
+  const rangeInput = document.getElementById(rangeId);
+  numInput.addEventListener('input', () => rangeInput.value = numInput.value);
+  rangeInput.addEventListener('input', () => numInput.value = rangeInput.value);
+}
+syncInputs('fragranceScore', 'fragranceRange');
+syncInputs('flavorScore', 'flavorRange');
+syncInputs('aftertasteScore', 'aftertasteRange');
+syncInputs('acidityScore', 'acidityRange');
+syncInputs('bodyScore', 'bodyRange');
+syncInputs('balanceScore', 'balanceRange');
+syncInputs('overallScore', 'overallRange');
+
+function getFullSummaryText() {
+  const data = getFormData();
+  const { finalScore, grade } = getSummaryData();
+  
+  let text = `Sample: ${data.sampleId}\nRoast: ${data.roast}\nNotes: ${data.notes}\nDefects: ${data.defectNotes}\nAcidity Level: ${data.acidityLevel}\n\nคะแนนรวม: ${finalScore.toFixed(2)} (${grade})\n\nรายละเอียดคะแนน:\n`;
+  
+  text += `Fragrance/Aroma: ${data.scores.fragrance.toFixed(2)} (บันทึก: ${data.notes.fragranceNote || ''} / ${data.notes.aromaNote || ''})\n`;
+  text += `Flavor: ${data.scores.flavor.toFixed(2)} (บันทึก: ${data.notes.flavorNote || ''})\n`;
+  text += `Aftertaste: ${data.scores.aftertaste.toFixed(2)} (บันทึก: ${data.notes.aftertasteNote || ''})\n`;
+  text += `Acidity: ${data.scores.acidity.toFixed(2)} (บันทึก: ${data.notes.acidityNote || ''})\n`;
+  text += `Body: ${data.scores.body.toFixed(2)} (บันทึก: ${data.notes.bodyNote || ''})\n`;
+  text += `Balance: ${data.scores.balance.toFixed(2)} (บันทึก: ${data.notes.balanceNote || ''})\n`;
+  text += `Uniformity: ${(10 - data.cupChecks.uniformity.filter(v=>v===1).length*2).toFixed(2)} (บันทึก: ${data.cupChecks.uniformity.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ') || 'ทุกแก้วผ่าน'})\n`;
+  text += `Clean Cup: ${(10 - data.cupChecks.cleanCup.filter(v=>v===1).length*2).toFixed(2)} (บันทึก: ${data.cupChecks.cleanCup.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ') || 'ทุกแก้วผ่าน'})\n`;
+  text += `Sweetness: ${(10 - data.cupChecks.sweetness.filter(v=>v===1).length*2).toFixed(2)} (บันทึก: ${data.cupChecks.sweetness.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ') || 'ทุกแก้วผ่าน'})\n`;
+  text += `Overall: ${data.scores.overall.toFixed(2)} (บันทึก: ${data.notes.overallNote || ''})\n`;
+  
+  text += `\nDefects: ${data.cupChecks.cleanCup.filter(v => v === 1).length} แก้ว, คะแนนหักรวม: ${Object.values(data.defectScores).reduce((a,b)=>a+b,0)} คะแนน`;
+  
+  return text;
+}
+
+function getSummaryData() {
+  const data = getFormData();
+  let totalScore = 0;
+  let defectDeduction = 0;
+  
+  const scoreKeys = ['fragrance', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'overall'];
+  scoreKeys.forEach(key => {
+    totalScore += data.scores[key];
+  });
+  
+  const cupCheckKeys = ['uniformity', 'cleanCup', 'sweetness'];
+  cupCheckKeys.forEach(key => {
+    totalScore += 10 - data.cupChecks[key].filter(v => v === 1).length * 2;
+  });
+  
+  Object.values(data.defectScores).forEach(val => {
+    defectDeduction += val;
+  });
+  
+  const finalScore = totalScore - defectDeduction;
+  const grade = finalScore >= 80 ? 'Specialty' : 'Not Specialty';
+  return { finalScore, grade };
+}
+
+document.getElementById('btnExportCSV').onclick = () => {
+  const data = getFormData();
+  const { finalScore, grade } = getSummaryData();
+  const defectCount = data.cupChecks.cleanCup.filter(v => v === 1).length;
+  const defectDeduction = Object.values(data.defectScores).reduce((a,b)=>a+b,0);
+  
+  const headers = ['Sample','Roast','Notes','Defect Notes','Defect Count','Defect Deduction','AcidityLevel','Fragrance/Aroma Score','Fragrance Note','Aroma Note','Flavor Score','Flavor Note','Aftertaste Score','Aftertaste Note','Acidity Score','Acidity Note','Body Score','Body Note','Balance Score','Balance Note','Uniformity Score','Uniformity Note','Clean Cup Score','Clean Cup Note','Sweetness Score','Sweetness Note','Overall Score','Overall Note','Final Score','Grade'];
+  
+  const row = [
+    `"${data.sampleId}"`,
+    `"${data.roast}"`,
+    `"${data.notes}"`,
+    `"${data.defectNotes}"`,
+    defectCount,
+    defectDeduction,
+    `"${data.acidityLevel}"`,
+    (data.scores.fragrance).toFixed(2),
+    `"${data.notes.fragranceNote}"`,
+    `"${data.notes.aromaNote}"`,
+    (data.scores.flavor).toFixed(2),
+    `"${data.notes.flavorNote}"`,
+    (data.scores.aftertaste).toFixed(2),
+    `"${data.notes.aftertasteNote}"`,
+    (data.scores.acidity).toFixed(2),
+    `"${data.notes.acidityNote}"`,
+    (data.scores.body).toFixed(2),
+    `"${data.notes.bodyNote}"`,
+    (data.scores.balance).toFixed(2),
+    `"${data.notes.balanceNote}"`,
+    (10 - data.cupChecks.uniformity.filter(v=>v===1).length*2).toFixed(2),
+    `"${data.cupChecks.uniformity.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ') || 'ทุกแก้วผ่าน'}"`,
+    (10 - data.cupChecks.cleanCup.filter(v=>v===1).length*2).toFixed(2),
+    `"${data.cupChecks.cleanCup.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ') || 'ทุกแก้วผ่าน'}"`,
+    (10 - data.cupChecks.sweetness.filter(v=>v===1).length*2).toFixed(2),
+    `"${data.cupChecks.sweetness.filter(v=>v===1).map( (v,i) => `แก้ว ${i+1}`).join(', ') || 'ทุกแก้วผ่าน'}"`,
+    (data.scores.overall).toFixed(2),
+    `"${data.notes.overallNote}"`,
+    finalScore.toFixed(2),
+    `"${grade}"`
+  ];
+  
+  const csv = '\ufeff' + headers.join(',') + "\n" + row.join(',');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cupping_${data.sampleId || 'sample'}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+document.getElementById('btnExportTXT').onclick = () => {
+  const text = getFullSummaryText();
+  const blob = new Blob([text],{type:'text/plain;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cupping.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+function captureSummaryAndSave(type) {
+  const summaryCard = document.getElementById('summaryCard');
+  html2canvas(summaryCard, { scale: 2 }).then(canvas => {
+    if(type === 'png'){
+      const link = document.createElement('a');
+      link.download = 'cupping.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+    if(type === 'pdf'){
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      const imgData = canvas.toDataURL('image/png');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('cupping.pdf');
+    }
+    if(type === 'share'){
+      canvas.toBlob(blob => {
+        const file = new File([blob], 'cupping.png', { type: 'image/png' });
+        if(navigator.share){
+          navigator.share({
+            title: 'SCA Cupping Result',
+            files: [file],
+            text: 'สรุปผลการประเมินกาแฟ'
+          }).catch(error => console.error('Error sharing:', error));
+        } else {
+          alert("ขออภัยค่ะ เบราว์เซอร์ไม่รองรับ Web Share API");
+        }
+      });
+    }
+  });
+}
+
+document.getElementById('btnExportPNG').onclick = () => captureSummaryAndSave('png');
+document.getElementById('btnExportPDF').onclick = () => captureSummaryAndSave('pdf');
+document.getElementById('btnShare').onclick = () => captureSummaryAndSave('share');
+</script>
+</body>
+</html>
